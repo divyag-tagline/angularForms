@@ -1,29 +1,167 @@
-<div class="row justify-content-sm-center mt-3">
-    <div class="col-sm-6">
-      <form>
-        <div class="form-group">
-          <label>Name</label>
-          <input class="form-control" placeholder="Provide your name" ngModel name="name"  required type="text"  />
+<!-- <div class="row justify-content-sm-center mt-3">
+  <div class="col-sm-6">
+    <form #forms="ngForm" (ngSubmit)="onSubmit(forms)">
+      <div class="form-group">
+        <label>Name</label>
+        <input
+          type="text"
+          class="form-control"
+          placeholder="Provide your name"
+          name="firstname"
+          [(ngModel)]="data.firstname"
+          minlength="10"
+          #firstname="ngModel"
+          required
+        />
+      </div>
+      <div *ngIf="!firstname?.valid && (firstname?.dirty || firstname?.touched)">
+        Invalid First Name
+     </div>
+      <!-- <div class="form-group"
+     [ngClass]="{
+      'has-danger': forms.form.controls.fname?.invalid && (forms.form.controls.email?.dirty || forms.form.controls.email?.touched),
+      'has-success': forms.form.controls.email?.valid && (forms.form.controls.email?.dirty || forms.form.controls.email?.touched)
+ }"> 
+      <div class="form-group">
+        <label>Email Address</label>
+        <input
+          type="email"
+          class="form-control"
+          placeholder="Provide your email address"
+          name="emailAddress"
+          [(ngModel)]="data.email"
+          required
+        />
+      </div>
+      <div class="form-group">
+        <label>Age</label>
+        <input
+          type="number"
+          class="form-control"
+          placeholder="Provide your age"
+          name="age"
+          [(ngModel)]="data.age"
+          required
+        />
+      </div>
+      <div class="form-group">
+        <div style="display: flex; margin-top: 10px">
+          <button
+            type="submit"
+            class="btn btn-primary"
+            style="margin-left: auto; width: 30%"
+          >
+            Submit
+          </button>
         </div>
+      </div>
+    </form>
+  </div>
+</div> -->
+
+<!-- <div>
+  <form (ngSubmit)="onSubmit(f)" #f="ngForm">
+    <div>
+      <label for="name">Name</label>
+      <input type="text" id="name" name="name" [(ngModel)]="name" required />
+    </div>
+    <div>
+      <label for="email">Email</label>
+      <input
+        type="email"
+        id="email"
+        name="email"
+        [(ngModel)]="email"
+        required
+      />
+    </div>
+    <div>
+      <label for="age">Age</label>
+      <input type="number" id="age" name="age" [(ngModel)]="age" required />
+    </div>
+    <div>
+      <label for="preference">Preference</label>
+      <select
+        id="preference"
+        name="preference"
+        [(ngModel)]="preference"
+        required
+      >
+        <option *ngFor="let pref of preferences" [value]="pref">
+          {{ pref }}
+        </option>
+      </select>
+    </div>
+    <button type="submit">Submit</button>
+  </form>
+</div> -->
+
+<div class="container">
+  <div class="row">
+    <div class="col-xs-12 col-sm-10 col-md-8 col-sm-offset-1 col-md-offset-2">
+      <form (ngSubmit)="onSubmit(formdemo, userData)" #formdemo="ngForm">
         <div class="form-group">
-          <label>Email Address</label>
-          <input class="form-control" placeholder="Provide your email address" ngModel name="emailAddress" required type="email"  />
+          <label for="username">Username</label>
+          <input
+            type="text"
+            id="username"
+            class="form-control"
+            [(ngModel)]="userData.username"
+            name="username"
+            required
+          />
         </div>
+
         <div class="form-group">
-          <label>Age</label>
-          <input class="form-control" placeholder="Provide your age" ngModel name="age" required type="number" />
+          <label for="email">Mail</label>
+          <input
+            type="email"
+            id="email"
+            class="form-control"
+            [(ngModel)]="userData.email"
+            name="email"
+            required
+            email
+            #email="ngModel"
+          />
+          <span class="help-block" *ngIf="!email.valid && email.touched"
+            >Please enter a valid email!</span
+          >
         </div>
+
         <div class="form-group">
-          <div style="display: flex; margin-top: 10px">
-            <button
-              type="submit"
-              class="btn btn-primary"
-              style="margin-left: auto; width: 30%"
-            >
-              Submit
-            </button>
-          </div>
+          <label for="country">Select country</label>
+          <select
+            id="country"
+            class="form-control"
+            [(ngModel)]="userData.country"
+            name="country"
+          >
+            <option value="india">india</option>
+            <option value="usa">USA</option>
+          </select>
         </div>
+
+        <div class="radio" *ngFor="let gender of genders">
+          <label>
+            <input
+              type="radio"
+              name="gender"
+              [(ngModel)]="userData.gender"
+              [value]="gender"
+              required
+            />
+            {{ gender }}
+          </label>
+        </div>
+        <button
+          class="btn btn-primary"
+          type="submit"
+          [disabled]="!formdemo.valid"
+        >
+          Submit
+        </button>
       </form>
     </div>
   </div>
+</div>
