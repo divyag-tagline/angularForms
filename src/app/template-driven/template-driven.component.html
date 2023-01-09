@@ -1,115 +1,45 @@
-<!-- <div class="row justify-content-sm-center mt-3">
-  <div class="col-sm-6">
-    <form #forms="ngForm" (ngSubmit)="onSubmit(forms)">
-      <div class="form-group">
-        <label>Name</label>
-        <input
-          type="text"
-          class="form-control"
-          placeholder="Provide your name"
-          name="firstname"
-          [(ngModel)]="data.firstname"
-          minlength="10"
-          #firstname="ngModel"
-          required
-        />
-      </div>
-      <div *ngIf="!firstname?.valid && (firstname?.dirty || firstname?.touched)">
-        Invalid First Name
-     </div>
-      <!-- <div class="form-group"
-     [ngClass]="{
-      'has-danger': forms.form.controls.fname?.invalid && (forms.form.controls.email?.dirty || forms.form.controls.email?.touched),
-      'has-success': forms.form.controls.email?.valid && (forms.form.controls.email?.dirty || forms.form.controls.email?.touched)
- }"> 
-      <div class="form-group">
-        <label>Email Address</label>
-        <input
-          type="email"
-          class="form-control"
-          placeholder="Provide your email address"
-          name="emailAddress"
-          [(ngModel)]="data.email"
-          required
-        />
-      </div>
-      <div class="form-group">
-        <label>Age</label>
-        <input
-          type="number"
-          class="form-control"
-          placeholder="Provide your age"
-          name="age"
-          [(ngModel)]="data.age"
-          required
-        />
-      </div>
-      <div class="form-group">
-        <div style="display: flex; margin-top: 10px">
-          <button
-            type="submit"
-            class="btn btn-primary"
-            style="margin-left: auto; width: 30%"
-          >
-            Submit
-          </button>
-        </div>
-      </div>
-    </form>
-  </div>
-</div> -->
-
-<!-- <div>
-  <form (ngSubmit)="onSubmit(f)" #f="ngForm">
-    <div>
-      <label for="name">Name</label>
-      <input type="text" id="name" name="name" [(ngModel)]="name" required />
-    </div>
-    <div>
-      <label for="email">Email</label>
-      <input
-        type="email"
-        id="email"
-        name="email"
-        [(ngModel)]="email"
-        required
-      />
-    </div>
-    <div>
-      <label for="age">Age</label>
-      <input type="number" id="age" name="age" [(ngModel)]="age" required />
-    </div>
-    <div>
-      <label for="preference">Preference</label>
-      <select
-        id="preference"
-        name="preference"
-        [(ngModel)]="preference"
-        required
-      >
-        <option *ngFor="let pref of preferences" [value]="pref">
-          {{ pref }}
-        </option>
-      </select>
-    </div>
-    <button type="submit">Submit</button>
-  </form>
-</div> -->
-
-<div class="container">
+<div class="container-lg m-0">
   <div class="row">
-    <div class="col-xs-12 col-sm-10 col-md-8 col-sm-offset-1 col-md-offset-2">
-      <form (ngSubmit)="onSubmit(formdemo, userData)" #formdemo="ngForm">
+    <div class="col-6 justify-content-center">
+      <h1>Registration form</h1>
+      <form
+        class="justify-content-center"
+        (ngSubmit)="onSubmit()"
+        #formdemo="ngForm"
+      >
         <div class="form-group">
-          <label for="username">Username</label>
+          <label for="firstName">First Name</label>
           <input
             type="text"
-            id="username"
+            id="firstName"
             class="form-control"
-            [(ngModel)]="userData.username"
-            name="username"
+            [(ngModel)]="userData.firstName"
+            name="firstName"
+            #firstName="ngModel"
             required
           />
+          <span
+            class="help-block"
+            *ngIf="firstName.invalid && firstName.touched && !firstName.dirty"
+            >Please Enter a First Name!</span
+          >
+        </div>
+
+        <div class="form-group">
+          <label for="username">Last Name</label>
+          <input
+            type="text"
+            id="lastName"
+            class="form-control"
+            [(ngModel)]="userData.lastName"
+            name="lastName"
+            #lastName="ngModel"
+            required
+            [disabled]="!userData.firstName"
+          />
+          <span class="help-block" *ngIf="!lastName.valid && lastName.touched"
+            >Please Enter a Last Name!</span
+          >
         </div>
 
         <div class="form-group">
@@ -119,17 +49,37 @@
             id="email"
             class="form-control"
             [(ngModel)]="userData.email"
+            pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$"
             name="email"
             required
-            email
+            [disabled]="!userData.lastName"
             #email="ngModel"
           />
           <span class="help-block" *ngIf="!email.valid && email.touched"
             >Please enter a valid email!</span
           >
         </div>
-
         <div class="form-group">
+          <label for="mobileNo">Phone no</label>
+          <input
+            type="text"
+            id="mobileNo"
+            class="form-control"
+            [(ngModel)]="userData.mobileNo"
+            name="mobileNo"
+            (keypress)="blockCharacter($event)"
+            [disabled]="!userData.email"
+            #mobileNo="ngModel"
+            maxlength="10"
+            minlength="10"
+            required
+          />
+          <span class="help-block" *ngIf="!mobileNo.valid && mobileNo.touched"
+            >Please enter a valid Mobile No!</span
+          >
+        </div>
+
+        <!-- <div class="form-group">
           <label for="country">Select country</label>
           <select
             id="country"
@@ -140,28 +90,49 @@
             <option value="india">india</option>
             <option value="usa">USA</option>
           </select>
+        </div> -->
+        <div class="form-group mb-3 mt-3">
+          <div class="row">
+            <div class="col-2">
+              <label> Gender </label>
+            </div>
+            <div class="radio col-2" *ngFor="let gender of genders">
+              <input
+                type="radio"
+                name="gender"
+                [id]="gender"
+                [(ngModel)]="userData.gender"
+                [value]="gender"
+                required
+              />
+              <label class="ml-2" [for]="gender">{{ gender }}</label>
+            </div>
+          </div>
         </div>
-
-        <div class="radio" *ngFor="let gender of genders">
-          <label>
-            <input
-              type="radio"
-              name="gender"
-              [(ngModel)]="userData.gender"
-              [value]="gender"
-              required
-            />
-            {{ gender }}
-          </label>
-        </div>
-        <button
-          class="btn btn-primary"
-          type="submit"
-          [disabled]="!formdemo.valid"
-        >
-          Submit
-        </button>
+        <button class="btn btn-primary" type="submit">Submit</button>
       </form>
+    </div>
+    <div class="col-6 justify-content-center mx-auto">
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Email</th>
+            <th>Phone No</th>
+            <th>Gender</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of details">
+            <td>{{ item.firstName }}</td>
+            <td>{{ item.lastName }}</td>
+            <td>{{ item.email }}</td>
+            <td>{{ item.mobileNo }}</td>
+            <td>{{ item.gender }}</td>
+          </tr>
+        </tbody>
+      </table>
     </div>
   </div>
 </div>
