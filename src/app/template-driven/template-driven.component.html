@@ -4,7 +4,7 @@
       <h1>Registration form</h1>
     </div>
     <div class="card-body">
-      <form class="justify-content-center" (ngSubmit)="onSubmit()" #formdemo="ngForm" novalidate >
+      <form class="justify-content-center" #formdemo="ngForm"  >
         <div class="form-group">
           <label class="h5" for="firstName">First Name</label>
           <input
@@ -18,7 +18,7 @@
           />
           <span
             class=" help-block text-danger"
-            *ngIf="(firstName.invalid && firstName.touched && !firstName.dirty) || submitted"
+            *ngIf="(firstName.invalid && firstName.touched) || (submitted && !firstName.dirty)"
             >Please Enter a First Name!</span
           >
         </div>
@@ -34,7 +34,7 @@
             #lastName="ngModel"
             required
           />
-          <span class=" help-block text-danger" *ngIf="(!lastName.valid && lastName.touched) || submitted"
+          <span class=" help-block text-danger" *ngIf="lastName.invalid && lastName.touched || (submitted && !lastName.dirty)"
             >Please Enter a Last Name!</span
           >
         </div>
@@ -51,8 +51,8 @@
             required
             #email="ngModel"
           />
-          <span class=" help-block text-danger" *ngIf="(!email.valid && email.touched) || submitted"
-            >Please enter a valid email!</span
+          <span class=" help-block text-danger" *ngIf="(email.invalid && email.touched) || (submitted && !email.dirty)"
+            >Please enter a invalid email!</span
           >
         </div>
         <div class="form-group">
@@ -69,8 +69,8 @@
             minlength="10"
             required
           />
-          <span class=" help-block text-danger" *ngIf="(!mobileNo.valid && mobileNo.touched) || submitted"
-            >Please enter a valid Mobile No!</span
+          <span class=" help-block text-danger" *ngIf="mobileNo.invalid && mobileNo.touched || (submitted && !mobileNo.dirty)"
+            >Please enter a invalid Mobile No!</span
           >
         </div>
 
@@ -93,18 +93,18 @@
               <br />
                 <small
                   class=" help-block text-danger"
-                  *ngIf="(errors.invalid && errors.touched) || submitted"
+                  *ngIf="(errors.invalid && errors.touched) || (submitted && !errors.dirty)"
                   >Please Select Gender!</small
                 >
             </div>
           </div>
         </div>
-        <button class="btn btn-primary w-100"  type="submit">
-          Submit
-        </button>
       </form>
     </div>
     <div class="card-footer">
+      <button class="btn btn-primary w-100" (click)="onSubmit()" type="submit">
+        Submit
+      </button>
     </div>
   </div>
   <div class="col-6 justify-content-center mx-auto">

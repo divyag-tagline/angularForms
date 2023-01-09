@@ -58,8 +58,8 @@ export class TemplateDrivenComponent implements OnInit {
   }
 
   onSubmit() {
-    this.submitted = true;
     if (this.formdemo.form.invalid) {
+      this.submitted = true;
       return;
     }
     const data = {
@@ -70,5 +70,6 @@ export class TemplateDrivenComponent implements OnInit {
     
     this.details.push(data);
     this.formdemo.reset();
+    this.submitted = false
   }
 }
