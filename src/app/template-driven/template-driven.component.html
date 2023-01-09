@@ -1,14 +1,12 @@
-<div class="container-lg m-0">
-  <div class="row">
-    <div class="col-6 justify-content-center">
+<div class="row p-2 m-0">
+  <div class="col-6 card justify-content-center p-0 m-0">
+    <div class="card-header bg-success text-white">
       <h1>Registration form</h1>
-      <form
-        class="justify-content-center"
-        (ngSubmit)="onSubmit()"
-        #formdemo="ngForm"
-      >
+    </div>
+    <div class="card-body">
+      <form class="justify-content-center" (ngSubmit)="onSubmit()" #formdemo="ngForm" novalidate >
         <div class="form-group">
-          <label for="firstName">First Name</label>
+          <label class="h5" for="firstName">First Name</label>
           <input
             type="text"
             id="firstName"
@@ -19,14 +17,14 @@
             required
           />
           <span
-            class="help-block"
-            *ngIf="firstName.invalid && firstName.touched && !firstName.dirty"
+            class=" help-block text-danger"
+            *ngIf="(firstName.invalid && firstName.touched && !firstName.dirty) || submitted"
             >Please Enter a First Name!</span
           >
         </div>
 
         <div class="form-group">
-          <label for="username">Last Name</label>
+          <label class="h5" for="username">Last Name</label>
           <input
             type="text"
             id="lastName"
@@ -35,15 +33,14 @@
             name="lastName"
             #lastName="ngModel"
             required
-            [disabled]="!userData.firstName"
           />
-          <span class="help-block" *ngIf="!lastName.valid && lastName.touched"
+          <span class=" help-block text-danger" *ngIf="(!lastName.valid && lastName.touched) || submitted"
             >Please Enter a Last Name!</span
           >
         </div>
 
         <div class="form-group">
-          <label for="email">Mail</label>
+          <label class="h5" for="email">Mail</label>
           <input
             type="email"
             id="email"
@@ -52,15 +49,14 @@
             pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$"
             name="email"
             required
-            [disabled]="!userData.lastName"
             #email="ngModel"
           />
-          <span class="help-block" *ngIf="!email.valid && email.touched"
+          <span class=" help-block text-danger" *ngIf="(!email.valid && email.touched) || submitted"
             >Please enter a valid email!</span
           >
         </div>
         <div class="form-group">
-          <label for="mobileNo">Phone no</label>
+          <label class="h5" for="mobileNo">Phone no</label>
           <input
             type="text"
             id="mobileNo"
@@ -68,71 +64,69 @@
             [(ngModel)]="userData.mobileNo"
             name="mobileNo"
             (keypress)="blockCharacter($event)"
-            [disabled]="!userData.email"
             #mobileNo="ngModel"
             maxlength="10"
             minlength="10"
             required
           />
-          <span class="help-block" *ngIf="!mobileNo.valid && mobileNo.touched"
+          <span class=" help-block text-danger" *ngIf="(!mobileNo.valid && mobileNo.touched) || submitted"
             >Please enter a valid Mobile No!</span
           >
         </div>
 
-        <!-- <div class="form-group">
-          <label for="country">Select country</label>
-          <select
-            id="country"
-            class="form-control"
-            [(ngModel)]="userData.country"
-            name="country"
-          >
-            <option value="india">india</option>
-            <option value="usa">USA</option>
-          </select>
-        </div> -->
         <div class="form-group mb-3 mt-3">
           <div class="row">
-            <div class="col-2">
-              <label> Gender </label>
+            <div class="col-lg-4 m-0">
+              <label class="h5"> Gender </label>
             </div>
-            <div class="radio col-2" *ngFor="let gender of genders">
+            <div class="radio col-lg-4 m-0 p-0" *ngFor="let gender of genders">
               <input
                 type="radio"
                 name="gender"
                 [id]="gender"
                 [(ngModel)]="userData.gender"
                 [value]="gender"
+                #errors="ngModel"
                 required
               />
-              <label class="ml-2" [for]="gender">{{ gender }}</label>
+              <label class="h5" class="ms-2" [for]="gender">{{ gender }}</label>
+              <br />
+                <small
+                  class=" help-block text-danger"
+                  *ngIf="(errors.invalid && errors.touched) || submitted"
+                  >Please Select Gender!</small
+                >
             </div>
           </div>
         </div>
-        <button class="btn btn-primary" type="submit">Submit</button>
+        <button class="btn btn-primary w-100"  type="submit">
+          Submit
+        </button>
       </form>
     </div>
-    <div class="col-6 justify-content-center mx-auto">
-      <table class="table table-striped">
-        <thead>
-          <tr>
-            <th>First Name</th>
-            <th>Last Name</th>
-            <th>Email</th>
-            <th>Phone No</th>
-            <th>Gender</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let item of details">
-            <td>{{ item.firstName }}</td>
-            <td>{{ item.lastName }}</td>
-            <td>{{ item.email }}</td>
-            <td>{{ item.mobileNo }}</td>
-            <td>{{ item.gender }}</td>
-          </tr>
-        </tbody>
-      </table>
+    <div class="card-footer">
     </div>
+  </div>
+  <div class="col-6 justify-content-center mx-auto">
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>First Name</th>
+          <th>Last Name</th>
+          <th>Email</th>
+          <th>Phone No</th>
+          <th>Gender</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let item of details">
+          <td>{{ item.firstName }}</td>
+          <td>{{ item.lastName }}</td>
+          <td>{{ item.email }}</td>
+          <td>{{ item.mobileNo }}</td>
+          <td>{{ item.gender }}</td>
+        </tr>
+      </tbody>
+    </table>
   </div>
 </div>

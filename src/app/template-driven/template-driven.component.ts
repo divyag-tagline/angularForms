@@ -36,7 +36,7 @@ export class TemplateDrivenComponent implements OnInit {
   ];
 
   genders = ['male', 'female'];
-
+  submitted : boolean = false
   userData: Data = {
     id: 0,
     firstName: '',
@@ -46,8 +46,6 @@ export class TemplateDrivenComponent implements OnInit {
     gender: '',
   };
   constructor() {}
-
-  submitted = false;
   ngOnInit(): void {}
   // handleSubmit(): void{
   //     console.log(this.name);
@@ -60,6 +58,7 @@ export class TemplateDrivenComponent implements OnInit {
   }
 
   onSubmit() {
+    this.submitted = true;
     if (this.formdemo.form.invalid) {
       return;
     }
@@ -67,6 +66,8 @@ export class TemplateDrivenComponent implements OnInit {
       id: this.details.length + 1,
       ...this.formdemo.form.value,
     };
+    console.log(this.formdemo.form);
+    
     this.details.push(data);
     this.formdemo.reset();
   }
