@@ -1,7 +1,12 @@
 <div class="row p-2 m-0">
-  <div class="col-6 card justify-content-center p-0 m-0">
-    <div class=""
-      [ngClass]="toggle ? 'card-header bg-success text-white' :'card-header bg-info text-white'"
+  <div class="col-4 card justify-content-center p-0 m-0">
+    <div
+      class=""
+      [ngClass]="
+        toggle
+          ? 'card-header bg-success text-white'
+          : 'card-header bg-info text-white'
+      "
     >
       <h1>Registration form</h1>
     </div>
@@ -121,29 +126,55 @@
             </div>
           </div>
         </div>
+        <div class="form-group">
+          <label class="h5">Country</label>
+          <select
+            class="form-select"
+            name="country"
+            [(ngModel)]="userData.country"
+          >
+            <option selected>Select Country</option>
+            <option *ngFor="let countries of country" [value]="countries">
+              {{ countries }}
+            </option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="h5">State</label>
+          <select class="form-select" name="state" [(ngModel)]="userData.state">
+            <option selected>Select State</option>
+            <option *ngFor="let states of state" [value]="states">
+              {{ states }}
+            </option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="h5">City</label>
+          <select class="form-select" name="city" [(ngModel)]="userData.city">
+            <option selected>Select City</option>
+            <option *ngFor="let cities of city" [value]="cities">
+              {{ cities }}
+            </option>
+          </select>
+        </div>
       </form>
     </div>
     <div class="card-footer">
-      
       <button
-        [ngClass]="toggle ? 'btn btn-success text-white w-100' : 'btn btn-info  w-100'"
+        [ngClass]="
+          toggle ? 'btn btn-success text-white w-100' : 'btn btn-info text-white  w-100'
+        "
         (click)="onSubmit()"
         type="submit"
       >
-      <ng-container
-      *ngIf="toggle; then toggleIn; else toggleOut">
-    </ng-container>
-    <ng-template #toggleIn>
-      Update
-    </ng-template>
-    <ng-template #toggleOut>
-      Submit
-    </ng-template>
-    
+        <ng-container *ngIf="toggle; then toggleIn; else toggleOut">
+        </ng-container>
+        <ng-template #toggleIn> Update </ng-template>
+        <ng-template #toggleOut> Submit </ng-template>
       </button>
     </div>
   </div>
-  <div class="col-6 justify-content-center mx-auto">
+  <div class="col-8 justify-content-center mx-auto">
     <table class="table table-striped">
       <thead>
         <tr>
@@ -152,6 +183,9 @@
           <th>Email</th>
           <th>Phone No</th>
           <th>Gender</th>
+          <th>Country</th>
+          <th>State</th>
+          <th>City</th>
           <th class="text-center">Actions</th>
         </tr>
       </thead>
@@ -162,6 +196,9 @@
           <td>{{ item.email }}</td>
           <td>{{ item.mobileNo }}</td>
           <td>{{ item.gender }}</td>
+          <td>{{ item.country }}</td>
+          <td>{{ item.state }}</td>
+          <td>{{ item.city }}</td>
           <td class="justify-content-center">
             <button
               (click)="handleEdit(item, i)"

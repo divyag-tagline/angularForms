@@ -9,6 +9,10 @@ interface Data {
   email: string;
   mobileNo: string;
   gender: string;
+  country:string;
+  state:string;
+  city:string;
+
 }
 @Component({
   selector: 'app-template-driven',
@@ -28,6 +32,9 @@ export class TemplateDrivenComponent implements OnInit {
       email: 'divyagabani@gmail.com',
       mobileNo: '7890123654',
       gender: 'female',
+      country:'India',
+      state:'Gujarat',
+      city:'Surat'
     },
     {
       id: 2,
@@ -36,10 +43,16 @@ export class TemplateDrivenComponent implements OnInit {
       email: 'grishma@gmail.com',
       mobileNo: '9874012365',
       gender: 'female',
+      country:'Canada',
+      state:'Kerala',
+      city:'Ahmedabad'
     },
   ];
 
   genders = ['male', 'female'];
+  country = ['India','Canada'];
+  state = ['Gujarat','Kerala'];
+  city = ['Surat','Ahmedabad'];
   submitted: boolean = false;
   userData: Data = {
     id: 0,
@@ -48,6 +61,9 @@ export class TemplateDrivenComponent implements OnInit {
     email: '',
     mobileNo: '',
     gender: '',
+    country:'',
+    state:'',
+    city:''
   };
   editData!: Data;
   editId!: number;
@@ -73,9 +89,9 @@ export class TemplateDrivenComponent implements OnInit {
         let values = this.formdemo.form.value;
         console.log('user', this.editId);
         console.log('data');
-        this.details.map((items) => {
-          if (items.id === this.editId) {
-            this.details[this.dataId] = values;
+            this.details[this.dataId] ={ 
+              id:this.editId,
+              ...this.formdemo.form.value};
             this.toggle = false;
             this.editId = 0;
             // items.firstName=  values.firstName,
@@ -83,8 +99,7 @@ export class TemplateDrivenComponent implements OnInit {
             // items.email= values.email,
             // items.mobileNo= values.mobileNo,
             // items.gender=values.gender
-          }
-        });
+          
       } else {
         console.log('submit');
 
@@ -105,6 +120,7 @@ export class TemplateDrivenComponent implements OnInit {
     // console.log('detail', this.details);
   }
   handleEdit(data: Data, index: number) {
+    console.log("data",data);
     this.formdemo.form.patchValue(data);
     this.submitted = false;
     this.editId = data.id;
