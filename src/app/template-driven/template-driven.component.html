@@ -1,10 +1,12 @@
 <div class="row p-2 m-0">
   <div class="col-6 card justify-content-center p-0 m-0">
-    <div class="card-header bg-success text-white">
+    <div class=""
+      [ngClass]="toggle ? 'card-header bg-success text-white' :'card-header bg-info text-white'"
+    >
       <h1>Registration form</h1>
     </div>
     <div class="card-body">
-      <form class="justify-content-center" #formdemo="ngForm"  >
+      <form class="justify-content-center" #formdemo="ngForm">
         <div class="form-group">
           <label class="h5" for="firstName">First Name</label>
           <input
@@ -17,8 +19,11 @@
             required
           />
           <span
-            class=" help-block text-danger"
-            *ngIf="(firstName.invalid && firstName.touched) || (submitted && !firstName.dirty)"
+            class="help-block text-danger"
+            *ngIf="
+              (firstName.invalid && firstName.touched) ||
+              (submitted && !firstName.dirty)
+            "
             >Please Enter a First Name!</span
           >
         </div>
@@ -34,7 +39,12 @@
             #lastName="ngModel"
             required
           />
-          <span class=" help-block text-danger" *ngIf="lastName.invalid && lastName.touched || (submitted && !lastName.dirty)"
+          <span
+            class="help-block text-danger"
+            *ngIf="
+              (lastName.invalid && lastName.touched) ||
+              (submitted && !lastName.dirty)
+            "
             >Please Enter a Last Name!</span
           >
         </div>
@@ -51,7 +61,11 @@
             required
             #email="ngModel"
           />
-          <span class=" help-block text-danger" *ngIf="(email.invalid && email.touched) || (submitted && !email.dirty)"
+          <span
+            class="help-block text-danger"
+            *ngIf="
+              (email.invalid && email.touched) || (submitted && !email.dirty)
+            "
             >Please enter a invalid email!</span
           >
         </div>
@@ -69,7 +83,12 @@
             minlength="10"
             required
           />
-          <span class=" help-block text-danger" *ngIf="mobileNo.invalid && mobileNo.touched || (submitted && !mobileNo.dirty)"
+          <span
+            class="help-block text-danger"
+            *ngIf="
+              (mobileNo.invalid && mobileNo.touched) ||
+              (submitted && !mobileNo.dirty)
+            "
             >Please enter a invalid Mobile No!</span
           >
         </div>
@@ -91,19 +110,36 @@
               />
               <label class="h5" class="ms-2" [for]="gender">{{ gender }}</label>
               <br />
-                <small
-                  class=" help-block text-danger"
-                  *ngIf="(errors.invalid && errors.touched) || (submitted && !errors.dirty)"
-                  >Please Select Gender!</small
-                >
+              <small
+                class="help-block text-danger"
+                *ngIf="
+                  (errors.invalid && errors.touched) ||
+                  (submitted && !errors.dirty)
+                "
+                >Please Select Gender!</small
+              >
             </div>
           </div>
         </div>
       </form>
     </div>
     <div class="card-footer">
-      <button class="btn btn-primary w-100" (click)="onSubmit()" type="submit">
-        Submit
+      
+      <button
+        [ngClass]="toggle ? 'btn btn-success text-white w-100' : 'btn btn-info  w-100'"
+        (click)="onSubmit()"
+        type="submit"
+      >
+      <ng-container
+      *ngIf="toggle; then toggleIn; else toggleOut">
+    </ng-container>
+    <ng-template #toggleIn>
+      Update
+    </ng-template>
+    <ng-template #toggleOut>
+      Submit
+    </ng-template>
+    
       </button>
     </div>
   </div>
@@ -116,15 +152,30 @@
           <th>Email</th>
           <th>Phone No</th>
           <th>Gender</th>
+          <th class="text-center">Actions</th>
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let item of details">
+        <tr *ngFor="let item of details; let i = index">
           <td>{{ item.firstName }}</td>
           <td>{{ item.lastName }}</td>
           <td>{{ item.email }}</td>
           <td>{{ item.mobileNo }}</td>
           <td>{{ item.gender }}</td>
+          <td class="justify-content-center">
+            <button
+              (click)="handleEdit(item, i)"
+              class="btn btn-outline-success"
+            >
+              Edit
+            </button>
+            <button
+              class="ms-3 btn btn-outline-danger"
+              (click)="handleDelete(item.id, i)"
+            >
+              Delete
+            </button>
+          </td>
         </tr>
       </tbody>
     </table>

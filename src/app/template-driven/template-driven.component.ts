@@ -1,5 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
+import { flush } from '@angular/core/testing';
 import { NgForm } from '@angular/forms';
+import { VirtualTimeScheduler } from 'rxjs';
 interface Data {
   id: number;
   firstName: string;
@@ -15,7 +17,9 @@ interface Data {
 })
 export class TemplateDrivenComponent implements OnInit {
   @ViewChild('formdemo') formdemo!: NgForm;
-  // data !: data;
+  toggle: boolean = false;
+  events!: string;
+  dataId!: number;
   details: Data[] = [
     {
       id: 1,
@@ -36,7 +40,7 @@ export class TemplateDrivenComponent implements OnInit {
   ];
 
   genders = ['male', 'female'];
-  submitted : boolean = false
+  submitted: boolean = false;
   userData: Data = {
     id: 0,
     firstName: '',
@@ -45,6 +49,8 @@ export class TemplateDrivenComponent implements OnInit {
     mobileNo: '',
     gender: '',
   };
+  editData!: Data;
+  editId!: number;
   constructor() {}
   ngOnInit(): void {}
   // handleSubmit(): void{
@@ -58,18 +64,52 @@ export class TemplateDrivenComponent implements OnInit {
   }
 
   onSubmit() {
+    // !this.toggle ? event.target.innerText = 'update' : event.target.innerText = 'submit'
     if (this.formdemo.form.invalid) {
       this.submitted = true;
       return;
+    } else {
+      if (this.editId) {
+        let values = this.formdemo.form.value;
+        console.log('user', this.editId);
+        console.log('data');
+        this.details.map((items) => {
+          if (items.id === this.editId) {
+            this.details[this.dataId] = values;
+            this.toggle = false;
+            this.editId = 0;
+            // items.firstName=  values.firstName,
+            // items.lastName= values.lastName,
+            // items.email= values.email,
+            // items.mobileNo= values.mobileNo,
+            // items.gender=values.gender
+          }
+        });
+      } else {
+        console.log('submit');
+
+        const data = {
+          id: this.details.length + 1,
+          ...this.formdemo.form.value,
+        };
+        this.details.push(data);
+      }
     }
-    const data = {
-      id: this.details.length + 1,
-      ...this.formdemo.form.value,
-    };
-    console.log(this.formdemo.form);
-    
-    this.details.push(data);
+
     this.formdemo.reset();
-    this.submitted = false
+    this.submitted = false;
+  }
+  handleDelete(deletedId: any, index: number) {
+    console.log('id', deletedId);
+    this.details.splice(index, 1);
+    // console.log('detail', this.details);
+  }
+  handleEdit(data: Data, index: number) {
+    this.formdemo.form.patchValue(data);
+    this.submitted = false;
+    this.editId = data.id;
+    this.dataId = index;
+    this.toggle = true;
+    this.editData = data;
   }
 }
