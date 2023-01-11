@@ -1,4 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
+import { flush } from '@angular/core/testing';
 import { NgForm } from '@angular/forms';
 interface Data {
   id: number;
@@ -6,7 +7,8 @@ interface Data {
   lastName: string;
   email: string;
   mobileNo: string;
-  hobby?: Hobbies[];
+  hobbies?: any;
+  hobbiesId?: any;
   gender: string;
   address: Address;
 }
@@ -19,7 +21,7 @@ interface Address {
 interface Hobbies {
   id?: number;
   label: string;
-  selected?: boolean;
+  isCheck?: boolean;
 }
 @Component({
   selector: 'app-template-driven',
@@ -38,10 +40,10 @@ export class TemplateDrivenComponent implements OnInit {
       lastName: 'Gabani',
       email: 'divyagabani@gmail.com',
       mobileNo: '7890123654',
-      hobby: [
-        { id: 1, label: 'Drawing', selected: true },
-        { id: 2, label: 'Cooking', selected: true },
-      ],
+      hobbies: 'Drawing',
+      // { id: 1, label: 'Drawing', isCheck: true },
+      // { id: 2, label: 'Cooking', isCheck: true },
+
       gender: 'female',
       address: { country: 'India', state: 'Gujarat', city: 'Surat' },
     },
@@ -51,17 +53,26 @@ export class TemplateDrivenComponent implements OnInit {
       lastName: 'Borda',
       email: 'grishma@gmail.com',
       mobileNo: '9874012365',
-      hobby: [{ id: 1, label: 'Drawing', selected: true }],
+      hobbies: 'Drawing,Cooking',
+      // { id: 1, label: 'Drawing', isCheck: true }
+
       gender: 'female',
       address: { country: 'Canada', state: 'Kerala', city: 'Ahmedabad' },
     },
   ];
-  selectedHobby: string[] = [];
+  selectedHobby: any;
+  selectedHobbyId: any;
   genders = ['male', 'female'];
-  hobbies = [
-    { id: 1, label: 'Drawing', selected: false },
-    { id: 2, label: 'Cooking', selected: false },
+  // hobbies = [
+  //   { id: 1, label: 'Drawing', selected: false },
+  //   { id: 2, label: 'Cooking', selected: false },
+  // ];
+  hobbies: Hobbies[] = [
+    { id: 1, label: 'Drawing', isCheck: false },
+    { id: 2, label: 'Cooking', isCheck: false },
+    { id: 3, label: 'Tracking', isCheck: false },
   ];
+  // hobbies : string[] = ['Drawing','Cooking','Tracking']
   countries = ['India', 'Canada'];
   states = ['Gujarat', 'Kerala'];
   cities = ['Surat', 'Ahmedabad'];
@@ -73,10 +84,11 @@ export class TemplateDrivenComponent implements OnInit {
     email: '',
     mobileNo: '',
     gender: '',
-    hobby: [],
+    hobbies: [],
     address: { country: '', state: '', city: '' },
   };
   editData!: Data;
+  checked!: boolean | undefined;
   editId!: number;
   constructor() {}
   ngOnInit(): void {}
@@ -89,37 +101,40 @@ export class TemplateDrivenComponent implements OnInit {
     if (x >= 42 && x <= 57) return true;
     else return false;
   }
-  onChangeData(e:any){
-    let selectedValue = e.target.value;
-    console.log(selectedValue);
-    
-    let checked = e.target.checked;
-    if(checked){
-      this.selectedHobby.push(selectedValue)
-    }
-    else{
-      let index = this.selectedHobby.indexOf(selectedValue);
-      this.selectedHobby.splice(index,1)
-    }
-    console.log(this.selectedHobby);
-    
+  onChangeData() {
+    // let selectedValue = e.target.value;
+    // console.log(selectedValue);
+
+    // let checked = e.target.checked;
+    // console.log(this.checked);
+
+    // if (checked) {
+    //   this.selectedHobby.push(selectedValue);
+    // } else {
+    //   let index = this.selectedHobby.indexOf(selectedValue);
+    //   this.selectedHobby.splice(index, 1);
+    // }
+    console.log('select', this.selectedHobby);
   }
   onSubmit() {
     // !this.toggle ? event.target.innerText = 'update' : event.target.innerText = 'submit'
+    console.log("controls",this.formdemo.form.controls);
+    
     if (this.formdemo.form.invalid) {
       this.submitted = true;
       return;
     } else {
       if (this.editId) {
-        let values = this.formdemo.form.value;
-        console.log('user', this.editId);
-        console.log('data');
+        console.log('this.details', this.selectedHobby);
         this.details[this.dataId] = {
+          hobbies: this.selectedHobby,
+          hobbiesId: this.selectedHobbyId,
           id: this.editId,
           ...this.formdemo.form.value,
         };
         this.toggle = false;
         this.editId = 0;
+
         // items.firstName=  values.firstName,
         // items.lastName= values.lastName,
         // items.email= values.email,
@@ -127,12 +142,27 @@ export class TemplateDrivenComponent implements OnInit {
         // items.gender=values.gender
       } else {
         console.log('submit', this.formdemo.form.value);
+        console.log(this.details);
+        this.selectedHobby = this.hobbies
+          .filter((x) => x.isCheck)
+          .map((x) => x.label)
+          .join(',')
+          .toString();
+        this.selectedHobbyId = this.hobbies
+          .filter((x) => x.id)
+          .map((x) => x.id)
+          .join(',')
+          .toString();
+        console.log('val', this.selectedHobby);
 
         const data = {
           id: this.details.length + 1,
+          hobbies: this.selectedHobby,
+          hobbiesId: this.selectedHobbyId,
           ...this.formdemo.form.value,
         };
         this.details.push(data);
+        console.log(this.details);
       }
     }
 
@@ -145,7 +175,15 @@ export class TemplateDrivenComponent implements OnInit {
     // console.log('detail', this.details);
   }
   handleEdit(data: Data, index: number) {
-    console.log('data', data);
+    // console.log('edit', data);
+    // let selectedHobbiesId = data.hobbiesId.split(',');
+    // for (let i = 0; i < selectedHobbiesId.length; i++) {
+    //   this.hobbies
+    //     .filter((x) => x.id === +selectedHobbiesId[i])
+    //     .map((x) => (x.isCheck = true));
+    // }
+    // this.formdemo.form.value.hobbies = data.hobbies;
+    // this.formdemo.form.value.hobbiesId = data.hobbiesId;
     this.formdemo.form.patchValue(data);
     this.submitted = false;
     this.editId = data.id;
