@@ -1,0 +1,181 @@
+<div class="row p-2 m-0">
+  <div class="col-4 card justify-content-center p-0 m-0">
+    <div class="">
+      <h1>Registration form</h1>
+    </div>
+    <div class="card-body">
+      <form
+        class="justify-content-center"
+        [formGroup]="profileForm"
+        (ngSubmit)="onSubmit()"
+      >
+        <div class="form-group">
+          <label class="h5" for="firstName">First Name</label>
+          <input
+            type="text"
+            id="firstName"
+            class="form-control"
+            name="firstName"
+            formControlName="firstName"
+            required
+          />
+          <span
+            class="text-danger"
+            *ngIf="
+              (profileFormControl['firstName'].invalid &&
+                profileFormControl['firstName'].touched) ||
+              (submitted && profileFormControl['firstName'].pristine)
+            "
+          >
+            FirstName is required
+          </span>
+        </div>
+
+        <div class="form-group">
+          <label class="h5" for="username">Last Name</label>
+          <input
+            type="text"
+            id="lastName"
+            class="form-control"
+            name="lastName"
+            formControlName="lastName"
+            required
+          />
+          <span
+            class="text-danger"
+            *ngIf="
+              (profileFormControl['lastName'].invalid &&
+                profileFormControl['lastName'].touched) ||
+              (submitted && profileFormControl['lastName'].pristine)
+            "
+          >
+            Last Name is required
+          </span>
+        </div>
+
+        <div class="form-group">
+          <label class="h5" for="email">Mail</label>
+          <input
+            type="email"
+            id="email"
+            class="form-control"
+            pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$"
+            name="email"
+            formControlName="email"
+            required
+          />
+          <span
+            class="text-danger"
+            *ngIf="
+              (profileFormControl['email'].invalid &&
+                profileFormControl['email'].touched) ||
+              (submitted && profileFormControl['email'].pristine)
+            "
+          >
+            Email is required
+          </span>
+        </div>
+        <div class="form-group">
+          <label class="h5" for="mobileNo">Phone no</label>
+          <input
+            type="text"
+            id="mobileNo"
+            class="form-control"
+            name="mobileNo"
+            (keypress)="blockCharacter($event)"
+            maxlength="10"
+            minlength="10"
+            formControlName="mobileNo"
+            required
+          />
+          <span
+            class="text-danger"
+            *ngIf="
+              (profileFormControl['mobileNo'].invalid &&
+                profileFormControl['mobileNo'].touched) ||
+              (submitted && profileFormControl['mobileNo'].pristine)
+            "
+          >
+            MobileNo is required
+          </span>
+        </div>
+
+        <div class="form-group mb-3 mt-3">
+          <div class="row">
+            <div class="col-lg-4 m-0">
+              <label class="h5"> Gender </label>
+            </div>
+            <div class="radio col-lg-4 m-0 p-0" *ngFor="let gender of genders">
+              <input
+                type="radio"
+                name="gender"
+                [id]="gender.value"
+                [value]="gender.value"
+                formControlName="gender"
+                required
+              />
+              <label class="h5" class="ms-2" [for]="gender.value">{{
+                gender.name
+              }}</label>
+              <br />
+            </div>
+            <span
+              class="text-danger"
+              *ngIf="
+                (profileFormControl['gender'].invalid &&
+                  profileFormControl['gender'].touched) ||
+                (submitted && profileFormControl['gender'].pristine)
+              "
+            >
+              Gender is required
+            </span>
+          </div>
+        </div>
+        <button type="submit" class="btn btn-info text-white w-100">
+          Submit
+        </button>
+      </form>
+    </div>
+    <div class="card-footer"></div>
+  </div>
+  <div class="col-8 justify-content-center mx-auto">
+    <table class="table table-striped">
+      <thead>
+        <tr class="text-center">
+          <th>First Name</th>
+          <th>Last Name</th>
+          <th>Email</th>
+          <th>Phone No</th>
+          <th>Gender</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr
+          *ngFor="let userDetail of usersDetails; let i = index"
+          class="text-center"
+        >
+          <td>{{ userDetail.firstName }}</td>
+          <td>{{ userDetail.lastName }}</td>
+          <td>{{ userDetail.email }}</td>
+          <td>{{ userDetail.mobileNo }}</td>
+          <td>{{ userDetail.gender }}</td>
+          <td>
+            <button
+              class="btn btn-outline-success"
+              (click)="handleEdit(userDetail, userDetail.id)"
+            >
+              Edit
+            </button>
+            <button
+              class="btn btn-outline-danger ms-2"
+              (click)="handleDelete(i)"
+            >
+              Delete
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
