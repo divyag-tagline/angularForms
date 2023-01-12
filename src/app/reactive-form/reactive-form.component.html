@@ -1,14 +1,12 @@
 <div class="row p-2 m-0">
   <div class="col-4 card justify-content-center p-0 m-0">
-    <div class="">
+    <div
+      [ngClass]="toggle ? 'text-center text-success' : 'text-center text-info'"
+    >
       <h1>Registration form</h1>
     </div>
     <div class="card-body">
-      <form
-        class="justify-content-center"
-        [formGroup]="profileForm"
-        (ngSubmit)="onSubmit()"
-      >
+      <form class="justify-content-center" [formGroup]="profileForm">
         <div class="form-group">
           <label class="h5" for="firstName">First Name</label>
           <input
@@ -76,6 +74,27 @@
           </span>
         </div>
         <div class="form-group">
+          <label class="h5" for="birthDate">Birth of Date</label>
+          <input
+            type="date"
+            id="birthDate"
+            class="form-control"
+            name="birthDate"
+            formControlName="birthDate"
+            required
+          />
+          <span
+            class="text-danger"
+            *ngIf="
+              (profileFormControl['birthDate'].invalid &&
+                profileFormControl['birthDate'].touched) ||
+              (submitted && profileFormControl['birthDate'].pristine)
+            "
+          >
+            Date of Birth is required
+          </span>
+        </div>
+        <div class="form-group">
           <label class="h5" for="mobileNo">Phone no</label>
           <input
             type="text"
@@ -99,7 +118,6 @@
             MobileNo is required
           </span>
         </div>
-
         <div class="form-group mb-3 mt-3">
           <div class="row">
             <div class="col-lg-4 m-0">
@@ -131,12 +149,122 @@
             </span>
           </div>
         </div>
-        <button type="submit" class="btn btn-info text-white w-100">
-          Submit
-        </button>
+        <div formGroupName="address">
+          <div class="form-group">
+            <label class="h5" for="country">Country</label>
+            <select
+              class="form-select"
+              formControlName="country"
+              (change)="selectCountry($event)"
+            >
+              <option selected>select country</option>
+              <option
+                [value]="country.countryId"
+                *ngFor="let country of countries"
+              >
+                {{ country.countryName }}
+              </option>
+            </select>
+            <span
+              class="text-danger"
+              *ngIf="
+                (addressControl['country'].invalid &&
+                  addressControl['country'].touched) ||
+                (submitted && addressControl['country'].pristine)
+              "
+            >
+              Country is required
+            </span>
+          </div>
+          <div class="form-group">
+            <label class="h5" for="state">State</label>
+            <select
+              class="form-select"
+              formControlName="state"
+              (change)="selectState($event)"
+            >
+              <option disabled selected>Select State</option>
+              <option
+                [disabled]="!addressControl['country'].value"
+                [value]="state.stateId"
+                *ngFor="let state of states"
+              >
+                {{ state.stateName }}
+              </option>
+            </select>
+            <span
+              class="text-danger"
+              *ngIf="
+                (!addressControl['country'].value &&
+                  addressControl['state'].touched) ||
+                (submitted && addressControl['state'].pristine)
+              "
+              >Please Select Coutry</span
+            >
+            <br />
+            <span
+              class="text-danger"
+              *ngIf="
+                addressControl['country'].value &&
+                addressControl['state'].touched &&
+                addressControl['state'].invalid
+              "
+            >
+              State is required
+            </span>
+          </div>
+          <div class="form-group">
+            <label class="h5" for="country">City</label>
+            <select class="form-select" formControlName="city">
+              <option disabled selected>Select City</option>
+              <option
+                [disabled]="!addressControl['state'].value"
+                [value]="city.cityId"
+                *ngFor="let city of cities"
+              >
+                {{ city.cityName }}
+              </option>
+            </select>
+            <span
+              class="text-danger"
+              *ngIf="
+                (!addressControl['state'].value &&
+                  addressControl['city'].touched) ||
+                (submitted && addressControl['city'].pristine)
+              "
+              >Please Selete State</span
+            >
+            <br />
+            <span
+              class="text-danger"
+              *ngIf="
+                addressControl['state'].value &&
+                addressControl['city'].touched &&
+                addressControl['city'].invalid
+              "
+            >
+              City is required
+            </span>
+          </div>
+        </div>
       </form>
     </div>
-    <div class="card-footer"></div>
+    <div class="card-footer">
+      <button
+        [ngClass]="
+          toggle
+            ? 'btn btn-success text-white w-100'
+            : 'btn btn-info text-white  w-100'
+        "
+        (click)="onSubmit()"
+        type="submit"
+      >
+        <ng-container *ngIf="toggle; then toggleIn; else toggleOut">
+        </ng-container>
+        <ng-template #toggleIn> Update </ng-template>
+        <ng-template #toggleOut> Submit </ng-template>
+      </button>
+    </div>
   </div>
   <div class="col-8 justify-content-center mx-auto">
     <table class="table table-striped">
@@ -145,36 +273,39 @@
           <th>First Name</th>
           <th>Last Name</th>
           <th>Email</th>
+          <th>Birth of Date</th>
           <th>Phone No</th>
           <th>Gender</th>
+          <td colspan="3">Address</td>
           <th>Action</th>
         </tr>
       </thead>
       <tbody>
-        <tr
-          *ngFor="let userDetail of usersDetails; let i = index"
-          class="text-center"
-        >
-          <td>{{ userDetail.firstName }}</td>
-          <td>{{ userDetail.lastName }}</td>
-          <td>{{ userDetail.email }}</td>
-          <td>{{ userDetail.mobileNo }}</td>
-          <td>{{ userDetail.gender }}</td>
-          <td>
-            <button
-              class="btn btn-outline-success"
-              (click)="handleEdit(userDetail, userDetail.id)"
-            >
-              Edit
-            </button>
-            <button
-              class="btn btn-outline-danger ms-2"
-              (click)="handleDelete(i)"
-            >
-              Delete
-            </button>
-          </td>
-        </tr>
+        <ng-container *ngFor="let userDetail of usersDetails; let i = index">
+          <tr class="text-center">
+            <td>{{ userDetail.firstName }}</td>
+            <td>{{ userDetail.lastName }}</td>
+            <td>{{ userDetail.email }}</td>
+            <td>{{ userDetail.birthDate | date : "dd-MM-yyyy" }}</td>
+            <td>{{ userDetail.mobileNo }}</td>
+            <td>{{ userDetail.gender }}</td>
+            <td></td>
+            <td>
+              <button
+                class="btn btn-outline-success"
+                (click)="handleEdit(userDetail, i)"
+              >
+                Edit
+              </button>
+              <button
+                class="btn btn-outline-danger ms-2"
+                (click)="handleDelete(i)"
+              >
+                Delete
+              </button>
+            </td>
+          </tr>
+        </ng-container>
       </tbody>
     </table>
   </div>
