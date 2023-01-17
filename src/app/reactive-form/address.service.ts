@@ -1,18 +1,18 @@
 import { Injectable } from '@angular/core';
-export interface Country{
-  countryName: string,
-  countryId:number
+export interface Country {
+  countryName: string;
+  countryId: number;
 }
-export interface State{
-  stateName:string,
-  stateId:number,
-  countryId:number
+export interface State {
+  stateName: string;
+  stateId: number;
+  countryId: number;
 }
-export interface City{
-  cityName : string,
-  cityId:number,
-  stateId:number
-  countryId:number
+export interface City {
+  cityName: string;
+  cityId: number;
+  stateId: number;
+  countryId: number;
 }
 @Injectable({
   providedIn: 'root',
@@ -55,45 +55,57 @@ export class AddressService {
       cityName: 'Surat',
       cityId: 201,
       stateId: 101,
-      countryId: 1
+      countryId: 1,
     },
     {
       cityName: 'Ahemdabad',
       cityId: 202,
       stateId: 101,
-      countryId: 1
+      countryId: 1,
     },
     {
       cityName: 'Kochi',
       cityId: 203,
       stateId: 102,
-      countryId: 1
+      countryId: 1,
     },
     {
       cityName: 'Kottayam',
       cityId: 204,
       stateId: 102,
-      countryId: 1
+      countryId: 1,
     },
     {
-      cityName: 'Vadodara',
-      cityId: 201,
+      cityName: 'Victoria',
+      cityId: 205,
       stateId: 103,
-      countryId: 2
+      countryId: 2,
     },
     {
-      cityName: 'Amreli',
-      cityId: 202,
+      cityName: 'Vancouver',
+      cityId: 206,
+      stateId: 103,
+      countryId: 2,
+    },
+    {
+      cityName: 'Toronto',
+      cityId: 207,
       stateId: 104,
-      countryId: 2
+      countryId: 2,
+    },
+    {
+      cityName: 'Vaughan',
+      cityId: 208,
+      stateId: 104,
+      countryId: 2,
     },
   ];
   constructor() {}
 
   getStatesByCountry(countryId: number) {
-    return this.state.filter((data)=>data.countryId === +countryId);
+    return this.state.filter((data) => data.countryId === +countryId);
   }
-  getCityByState(stateId:number){
-    return this.city.filter((data)=>data.stateId === +stateId);
+  getCityByState(stateId: number) {
+    return this.city.filter((data) => data.stateId === +stateId );
   }
 }

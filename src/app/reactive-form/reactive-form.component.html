@@ -156,7 +156,7 @@
             <select
               class="form-select"
               formControlName="country"
-              (change)="selectCountry($event)"
+              (change)="selectCountry($event,0)"
             >
               <option disabled selected>select country</option>
               <option
@@ -182,7 +182,7 @@
             <select
               class="form-select"
               formControlName="state"
-              (change)="selectState($event)"
+              (change)="selectState($event,0)"
             >
               <option disabled selected>Select State</option>
               <option
@@ -250,19 +250,23 @@
         </div>
         <div class="form-group">
           <input type="checkbox" formControlName="isToRead" id="isToRead" />
-          <label for="isToRead">&nbsp; I agree to our <a target="_blank" href="/">Terms of use</a> and
-            <a target="_blank" href="/">Privacy Policy</a>.</label>
-            <br/>
-            <span
-              class="text-danger"
-              *ngIf="
-                (profileFormControl['isToRead'].invalid &&
-                  profileFormControl['isToRead'].touched) ||
-                (submitted && profileFormControl['isToRead'].pristine)
-              "
-            >
+          <label for="isToRead"
+            >&nbsp; I agree to our
+            <a target="_blank" href="/">Terms of use</a> and
+            <a target="_blank" href="/">Privacy Policy</a>.</label
+          >
+          <br />
+          <span
+            class="text-danger"
+            *ngIf="
+              (profileFormControl['isToRead'].invalid &&
+              !profileFormControl['isToRead'].value &&
+                profileFormControl['isToRead'].touched) ||
+              (submitted && profileFormControl['isToRead'].pristine)
+            "
+          >
             Please confirm Agreement
-            </span>
+          </span>
         </div>
       </form>
     </div>
@@ -293,7 +297,7 @@
           <th>Birth of Date</th>
           <th>Phone No</th>
           <th>Gender</th>
-          <td colspan="3">Address</td>
+          <th colspan="3">Address</th>
           <th>Action</th>
         </tr>
       </thead>
