@@ -6,6 +6,7 @@ import {
   FormGroup,
   Validators,
 } from '@angular/forms';
+import { retry } from 'rxjs';
 import { AddressService, City, Country, State } from './address.service';
 interface UsersDetails {
   id: number;
@@ -34,7 +35,9 @@ export class ReactiveFormComponent implements OnInit {
   getStateDetails: any;
   countryId!: number;
   stateId!: number;
-  btnDisable: boolean = true;
+  countryName!: any;
+  stateName!: any;
+  cityName!: any;
   genders = [
     {
       name: 'Male',
@@ -62,11 +65,12 @@ export class ReactiveFormComponent implements OnInit {
   editForm!: UsersDetails;
   editId!: number;
   address!: Address;
+  addressDetails: any;
   dataId!: number;
   toggle: boolean = false;
   selectedState: boolean = false;
+  stateDetails: any;
   constructor(private addressService: AddressService) {
-    // console.log('country', this.countryId);
     this.countries = this.addressService.country;
   }
 
@@ -75,12 +79,9 @@ export class ReactiveFormComponent implements OnInit {
   }
   ngDoCheck(): void {
     if (this.countryId) {
-      console.log('country', this.countryId);
       this.states = this.addressService.getStatesByCountry(this.countryId);
       this.cities = this.addressService.getCityByState(this.stateId);
     }
-
-    console.log(this.states);
   }
   createProfileForm() {
     this.profileForm = new FormGroup({
@@ -104,7 +105,6 @@ export class ReactiveFormComponent implements OnInit {
 
   get addressControl() {
     return (this.profileFormControl['address'] as FormGroup).controls;
-    // return (this.profileForm.controls['address'] as FormGroup).controls
   }
 
   blockCharacter(e: any) {
@@ -113,17 +113,29 @@ export class ReactiveFormComponent implements OnInit {
     else return false;
   }
   onSubmit() {
-    console.log(this.profileForm);
-    
     if (this.profileForm.invalid) {
       this.submitted = true;
       return;
     } else {
+      let address: any;
+      address = this.profileForm.value.address;
+      this.countryName = this.countries.find(
+        (data) => data.countryId == +address.country
+      );
+      this.stateName = this.states.find(
+        (data) => data.stateId == +address.state
+      );
+      this.cityName = this.cities.find(
+        (data) => data.cityId == +address.city
+      );
+      
       if (this.editId) {
-        console.log(this.editId);
-        console.log(this.editForm);
-        console.log(this.usersDetails);
-
+        this.profileForm.value.address = {
+          city: this.cityName.cityId,
+          state: this.stateName.stateId,
+          country: this.countryName.countryId,
+        };
+        console.log(this.profileForm.value)
         this.usersDetails[this.dataId] = {
           id: this.editId,
           ...this.profileForm.value,
@@ -132,37 +144,34 @@ export class ReactiveFormComponent implements OnInit {
         this.toggle = false;
         console.log('update');
       } else {
+        this.profileForm.value.address = {
+          city: this.cityName.cityName,
+          state: this.stateName.stateName,
+          country: this.countryName.countryName,
+        };
         let data = {
           id: this.usersDetails.length + 1,
           ...this.profileForm.value,
         };
-        console.log('data', data);
-
         this.usersDetails.push(data);
       }
     }
-    console.log(this.usersDetails);
     this.profileForm.reset();
     this.submitted = false;
   }
   handleEdit(data: UsersDetails, index: number) {
-    // console.log(data.id);
     this.profileForm.patchValue(data);
     this.editForm = data;
     this.editId = data.id;
     this.toggle = true;
     this.dataId = index;
-
-    console.log(this.editId);
-    console.log(index);
   }
   handleDelete(index: number) {
     this.usersDetails.splice(index, 1);
   }
   selectCountry(e: any) {
-    console.log(e);
-    this.countryId = e.target.value;  ``
-    this.btnDisable = false;
+    console.log('DDDDD', e.target.value);
+    this.countryId = e.target.value;
   }
   selectState(e: any) {
     this.stateId = e.target.value;

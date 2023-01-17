@@ -289,7 +289,9 @@
             <td>{{ userDetail.birthDate | date : "dd-MM-yyyy" }}</td>
             <td>{{ userDetail.mobileNo }}</td>
             <td>{{ userDetail.gender }}</td>
-            <td></td>
+            <td>{{ userDetail.address.country }}</td>
+            <td>{{ userDetail.address.state }}</td>
+            <td>{{ userDetail.address.city }}</td>
             <td>
               <button
                 class="btn btn-outline-success"
