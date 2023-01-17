@@ -106,6 +106,6 @@ export class AddressService {
     return this.state.filter((data) => data.countryId === +countryId);
   }
   getCityByState(stateId: number) {
-    return this.city.filter((data) => data.stateId === +stateId );
+    return this.city.filter((data) => data.stateId === +stateId);
   }
 }

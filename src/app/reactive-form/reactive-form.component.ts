@@ -59,9 +59,7 @@ export class ReactiveFormComponent implements OnInit {
       firstName: 'divya',
       lastName: 'gabani',
       email: 'divya@gmail.com',
-      birthDate: new Date(
-        'Tue Jan 03 2023 05:30:00 GMT+0530 (India Standard Time)'
-      ),
+      birthDate: new Date('06-09-2001'),
       mobileNo: '9874012365',
       gender: 'female',
       address: {
@@ -191,8 +189,13 @@ export class ReactiveFormComponent implements OnInit {
     };
     this.selectCountry(0, data.address.country.countryId);
     this.selectState(0, data.address.state.stateId);
+    // let date = this.usersDetails[0].birthDate
+    // let bDate = date.getFullYear()+'-' + (date.getMonth()+1) + '-'+date.getDate()
+    // console.log(bDate);
     this.profileForm.patchValue(data);
+    // this.profileForm.controls['birthDate'].patchValue(bDate)
     this.profileForm.controls['address'].patchValue(address);
+    console.log(this.profileForm.value);
     this.editId = data.id;
     this.toggle = true;
     this.dataId = index;
@@ -210,7 +213,7 @@ export class ReactiveFormComponent implements OnInit {
   selectState(e: any, id: number) {
     if (e) {
       this.stateId = e.target.value;
-    }else {
+    } else {
       this.stateId = id;
     }
   }

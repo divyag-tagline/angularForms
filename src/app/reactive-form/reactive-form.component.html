@@ -156,7 +156,7 @@
             <select
               class="form-select"
               formControlName="country"
-              (change)="selectCountry($event,0)"
+              (change)="selectCountry($event, 0)"
             >
               <option disabled selected>select country</option>
               <option
@@ -182,7 +182,7 @@
             <select
               class="form-select"
               formControlName="state"
-              (change)="selectState($event,0)"
+              (change)="selectState($event, 0)"
             >
               <option disabled selected>Select State</option>
               <option
@@ -260,7 +260,7 @@
             class="text-danger"
             *ngIf="
               (profileFormControl['isToRead'].invalid &&
-              !profileFormControl['isToRead'].value &&
+                !profileFormControl['isToRead'].value &&
                 profileFormControl['isToRead'].touched) ||
               (submitted && profileFormControl['isToRead'].pristine)
             "
