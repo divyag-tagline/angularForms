@@ -16,12 +16,13 @@ interface UsersDetails {
   birthDate: Date;
   mobileNo: string;
   gender: string;
-  address: Address;
+  address: any;
+  isToRead:boolean;
 }
 interface Address {
-  country: string;
-  state: string;
-  city: string;
+  country: Country;
+  state: State;
+  city: City;
 }
 @Component({
   selector: 'app-reactive-form',
@@ -29,6 +30,7 @@ interface Address {
   styleUrls: ['./reactive-form.component.scss'],
 })
 export class ReactiveFormComponent implements OnInit {
+  editDetails!: UsersDetails;
   countries!: Country[];
   states!: State[];
   cities!: City[];
@@ -57,20 +59,36 @@ export class ReactiveFormComponent implements OnInit {
       birthDate: new Date('06-09-2001'),
       mobileNo: '9874563210',
       gender: 'female',
-      address: { country: 'India', state: 'Gujarat', city: 'Surat' },
+      address: {
+        country: {
+          countryName: 'India',
+          countryId: 1,
+        },
+        state: {
+          stateName: 'Gujarat',
+          stateId: 101,
+          countryId: 1,
+        },
+        city: {
+          cityName: 'Surat',
+          cityId: 201,
+          stateId: 101,
+          countryId: 1,
+        },
+      },
+      isToRead:true
     },
   ];
   submitted = false;
   profileForm!: FormGroup;
-  editForm!: UsersDetails;
   editId!: number;
   address!: Address;
-  addressDetails: any;
   dataId!: number;
   toggle: boolean = false;
-  selectedState: boolean = false;
-  stateDetails: any;
-  constructor(private addressService: AddressService) {
+  constructor(
+    private addressService: AddressService,
+    private formBuilder: FormBuilder
+  ) {
     this.countries = this.addressService.country;
   }
 
@@ -84,18 +102,19 @@ export class ReactiveFormComponent implements OnInit {
     }
   }
   createProfileForm() {
-    this.profileForm = new FormGroup({
-      firstName: new FormControl(null, Validators.required),
-      lastName: new FormControl('', [Validators.required]),
-      email: new FormControl('', [Validators.required, Validators.email]),
-      birthDate: new FormControl('', [Validators.required]),
-      mobileNo: new FormControl('', [Validators.required]),
-      gender: new FormControl('', [Validators.required]),
-      address: new FormGroup({
-        country: new FormControl('', [Validators.required]),
-        state: new FormControl('', [Validators.required]),
-        city: new FormControl('', [Validators.required]),
+    this.profileForm = this.formBuilder.group({
+      firstName: ['', Validators.required],
+      lastName: ['', Validators.required],
+      email: ['', [Validators.required, Validators.email]],
+      birthDate: ['', Validators.required],
+      mobileNo: ['', Validators.required],
+      gender: ['', Validators.required],
+      address: this.formBuilder.group({
+        country: ['', Validators.required],
+        state: ['', Validators.required],
+        city: ['', Validators.required],
       }),
+      isToRead: [false, Validators.pattern('true')]
     });
   }
 
@@ -117,7 +136,7 @@ export class ReactiveFormComponent implements OnInit {
       this.submitted = true;
       return;
     } else {
-      let address: any;
+      let address: Address;
       address = this.profileForm.value.address;
       this.countryName = this.countries.find(
         (data) => data.countryId == +address.country
@@ -125,43 +144,39 @@ export class ReactiveFormComponent implements OnInit {
       this.stateName = this.states.find(
         (data) => data.stateId == +address.state
       );
-      this.cityName = this.cities.find(
-        (data) => data.cityId == +address.city
-      );
-      
+      this.cityName = this.cities.find((data) => data.cityId == +address.city);
+      this.profileForm.value.address = {
+        city: this.cityName,
+        state: this.stateName,
+        country: this.countryName,
+      };
       if (this.editId) {
-        this.profileForm.value.address = {
-          city: this.cityName.cityId,
-          state: this.stateName.stateId,
-          country: this.countryName.countryId,
-        };
-        console.log(this.profileForm.value)
         this.usersDetails[this.dataId] = {
           id: this.editId,
           ...this.profileForm.value,
         };
         this.editId = 0;
         this.toggle = false;
-        console.log('update');
       } else {
-        this.profileForm.value.address = {
-          city: this.cityName.cityName,
-          state: this.stateName.stateName,
-          country: this.countryName.countryName,
-        };
+        
         let data = {
           id: this.usersDetails.length + 1,
           ...this.profileForm.value,
         };
         this.usersDetails.push(data);
       }
+      this.submitted = false;
     }
     this.profileForm.reset();
-    this.submitted = false;
   }
   handleEdit(data: UsersDetails, index: number) {
+    data.address = {
+      city: data.address.city.cityId,
+      country: data.address.country.countryId,
+      state: data.address.state.stateId,
+    };
     this.profileForm.patchValue(data);
-    this.editForm = data;
+    this.editDetails = data;
     this.editId = data.id;
     this.toggle = true;
     this.dataId = index;
