@@ -63,7 +63,9 @@ export class ReactiveFormComponent implements OnInit {
       email: 'divya@gmail.com',
       birthDate: new Date(
         this.date.getTime() - this.date.getTimezoneOffset() * 60000
-      ).toISOString().split('T')[0],
+      )
+        .toISOString()
+        .split('T')[0],
       mobileNo: '9874012365',
       gender: 'female',
       address: {
@@ -86,10 +88,8 @@ export class ReactiveFormComponent implements OnInit {
   address!: Address;
   dataId!: number;
   toggle: boolean = false;
-  constructor(
-    private addressService: AddressService,
-    private formBuilder: FormBuilder
-  ) {
+
+  constructor(private addressService: AddressService,private formBuilder: FormBuilder) {
     this.countries = this.addressService.country;
   }
 
@@ -115,7 +115,7 @@ export class ReactiveFormComponent implements OnInit {
         state: ['', Validators.required],
         city: ['', Validators.required],
       }),
-      isToRead: [false, Validators.pattern('true')],
+      isToRead: [false, Validators.requiredTrue],
     });
   }
 
@@ -126,22 +126,13 @@ export class ReactiveFormComponent implements OnInit {
   get addressControl() {
     return (this.profileFormControl['address'] as FormGroup).controls;
   }
-  setDate(data: any) {
-    // Set today date using the patchValue function
-    const date = new Date(data);
-    return {
-      date: {
-        year: date.getFullYear(),
-        month: date.getMonth() + 1,
-        day: date.getDate(),
-      },
-    };
-  }
+
   blockCharacter(e: any) {
     var x = e.which || e.keycode;
     if (x >= 42 && x <= 57) return true;
     else return false;
   }
+
   onSubmit(): void {
     if (this.profileForm.invalid) {
       this.submitted = true;
@@ -190,12 +181,17 @@ export class ReactiveFormComponent implements OnInit {
     this.profileForm.reset();
     this.submitted = false;
   }
+
   handleEdit(data: UsersDetails, index: number) {
     let address = {
       country: data.address.country.countryId,
       state: data.address.state.stateId,
       city: data.address.city.cityId,
-    }
+    };
+    console.log(
+      'this.profileForm.value.isToRead :>> ',
+      this.profileForm.value.isToRead
+    );
     this.selectCountry(0, data.address.country.countryId);
     this.selectState(0, data.address.state.stateId);
     this.profileForm.patchValue(data);
@@ -204,9 +200,11 @@ export class ReactiveFormComponent implements OnInit {
     this.toggle = true;
     this.dataId = index;
   }
+
   handleDelete(index: number) {
     this.usersDetails.splice(index, 1);
   }
+
   selectCountry(e: any, id: number) {
     if (e) {
       this.countryId = e.target.value;
@@ -214,6 +212,7 @@ export class ReactiveFormComponent implements OnInit {
       this.countryId = id;
     }
   }
+
   selectState(e: any, id: number) {
     if (e) {
       this.stateId = e.target.value;

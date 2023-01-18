@@ -260,7 +260,6 @@
             class="text-danger"
             *ngIf="
               (profileFormControl['isToRead'].invalid &&
-                !profileFormControl['isToRead'].value &&
                 profileFormControl['isToRead'].touched) ||
               (submitted && profileFormControl['isToRead'].pristine)
             "
