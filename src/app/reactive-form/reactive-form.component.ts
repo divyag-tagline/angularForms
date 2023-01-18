@@ -70,6 +70,37 @@ export class ReactiveFormComponent implements OnInit {
       mobileNo: '9874012365',
       gender: 'female',
       address: {
+        country: {
+          countryName: 'Canada',
+          countryId: 2,
+        },
+        state: {
+          stateName: 'British Colombia',
+          stateId: 103,
+          countryId: 2,
+        },
+        city:  {
+          cityName: 'Victoria',
+          cityId: 205,
+          stateId: 103,
+          countryId: 2,
+        },
+      },
+      isToRead: true,
+    },
+    {
+      id: 2,
+      firstName: 'Grishma',
+      lastName: 'Boprda',
+      email: 'grishma@gmail.com',
+      birthDate: new Date(
+        this.date.getTime() - this.date.getTimezoneOffset() * 60000
+      )
+        .toISOString()
+        .split('T')[0],
+      mobileNo: '9874012365',
+      gender: 'female',
+      address: {
         country: { countryName: 'India', countryId: 1 },
         state: { stateName: 'Gujarat', stateId: 101, countryId: 1 },
         city: {
@@ -90,7 +121,10 @@ export class ReactiveFormComponent implements OnInit {
   dataId!: number;
   toggle: boolean = false;
 
-  constructor(private addressService: AddressService,private formBuilder: FormBuilder) {
+  constructor(
+    private addressService: AddressService,
+    private formBuilder: FormBuilder
+  ) {
     this.countries = this.addressService.country;
   }
 
@@ -166,6 +200,7 @@ export class ReactiveFormComponent implements OnInit {
         this.editId = 0;
         this.toggle = false;
         this.profileForm.reset();
+        this.submitted = false;
       } else {
         let data = {
           id: this.usersDetails.length + 1,
@@ -177,10 +212,11 @@ export class ReactiveFormComponent implements OnInit {
           },
         };
         this.usersDetails.push(data);
+        this.submitted = false;
       }
+      this.submitted = false;
     }
     this.profileForm.reset();
-    this.submitted = false;
   }
 
   handleEdit(data: UsersDetails, index: number) {

@@ -20,9 +20,10 @@
           <span
             class="text-danger"
             *ngIf="
-              (profileFormControl['firstName'].invalid &&
-                profileFormControl['firstName'].touched) ||
-              (submitted && profileFormControl['firstName'].pristine)
+              profileFormControl['firstName'].touched ||
+              (submitted &&
+                profileFormControl['firstName'].pristine &&
+                profileFormControl['firstName'].invalid)
             "
           >
             FirstName is required
@@ -42,9 +43,10 @@
           <span
             class="text-danger"
             *ngIf="
-              (profileFormControl['lastName'].invalid &&
-                profileFormControl['lastName'].touched) ||
-              (submitted && profileFormControl['lastName'].pristine)
+              profileFormControl['lastName'].touched ||
+              (submitted &&
+                profileFormControl['lastName'].pristine &&
+                profileFormControl['lastName'].invalid)
             "
           >
             Last Name is required
@@ -65,9 +67,10 @@
           <span
             class="text-danger"
             *ngIf="
-              (profileFormControl['email'].invalid &&
-                profileFormControl['email'].touched) ||
-              (submitted && profileFormControl['email'].pristine)
+              profileFormControl['email'].touched ||
+              (submitted &&
+                profileFormControl['email'].pristine &&
+                profileFormControl['email'].invalid)
             "
           >
             Email is required
@@ -87,9 +90,10 @@
           <span
             class="text-danger"
             *ngIf="
-              (profileFormControl['birthDate'].invalid &&
-                profileFormControl['birthDate'].touched) ||
-              (submitted && profileFormControl['birthDate'].pristine)
+              profileFormControl['birthDate'].touched ||
+              (submitted &&
+                profileFormControl['birthDate'].pristine &&
+                profileFormControl['birthDate'].invalid)
             "
           >
             Date of Birth is required
@@ -112,8 +116,9 @@
             class="text-danger"
             *ngIf="
               (profileFormControl['mobileNo'].invalid &&
-                profileFormControl['mobileNo'].touched) ||
-              (submitted && profileFormControl['mobileNo'].pristine)
+                submitted &&
+                profileFormControl['mobileNo'].pristine) ||
+              profileFormControl['mobileNo'].touched
             "
           >
             MobileNo is required
@@ -141,9 +146,10 @@
             <span
               class="text-danger"
               *ngIf="
+                profileFormControl['gender'].touched ||
                 (profileFormControl['gender'].invalid &&
-                  profileFormControl['gender'].touched) ||
-                (submitted && profileFormControl['gender'].pristine)
+                  submitted &&
+                  profileFormControl['gender'].pristine)
               "
             >
               Gender is required
@@ -170,9 +176,10 @@
             <span
               class="text-danger"
               *ngIf="
+                addressControl['country'].touched ||
                 (addressControl['country'].invalid &&
-                  addressControl['country'].touched) ||
-                (submitted && addressControl['country'].pristine)
+                  submitted &&
+                  addressControl['country'].pristine)
               "
             >
               Country is required
@@ -199,7 +206,9 @@
               *ngIf="
                 (!addressControl['country'].value &&
                   addressControl['state'].touched) ||
-                (submitted && addressControl['state'].pristine)
+                (addressControl['state'].invalid &&
+                  submitted &&
+                  addressControl['state'].pristine)
               "
               >Please Select Coutry</span
             >
@@ -232,7 +241,9 @@
               *ngIf="
                 (!addressControl['state'].value &&
                   addressControl['city'].touched) ||
-                (submitted && addressControl['city'].pristine)
+                (addressControl['city'].invalid &&
+                  submitted &&
+                  addressControl['city'].pristine)
               "
               >Please Selete State</span
             >
@@ -260,9 +271,11 @@
           <span
             class="text-danger"
             *ngIf="
+            profileFormControl['isToRead'].invalid &&
+              profileFormControl['isToRead'].touched ||
               (profileFormControl['isToRead'].invalid &&
-                profileFormControl['isToRead'].touched) ||
-              (submitted && profileFormControl['isToRead'].pristine)
+                submitted &&
+                profileFormControl['isToRead'].pristine)
             "
           >
             Please confirm Agreement
