@@ -12,7 +12,7 @@ interface UsersDetails {
   firstName: string;
   lastName: string;
   email: string;
-  birthDate: Date;
+  birthDate: any;
   mobileNo: string;
   gender: string;
   address: {
@@ -53,13 +53,17 @@ export class ReactiveFormComponent implements OnInit {
       value: 'female',
     },
   ];
+  //  date = this.setDate('2001/09/06');
+  date = new Date('2001/9/6');
   usersDetails: UsersDetails[] = [
     {
       id: 1,
       firstName: 'divya',
       lastName: 'gabani',
       email: 'divya@gmail.com',
-      birthDate: new Date('06-09-2001'),
+      birthDate: new Date(
+        this.date.getTime() - this.date.getTimezoneOffset() * 60000
+      ).toISOString().split('T')[0],
       mobileNo: '9874012365',
       gender: 'female',
       address: {
@@ -75,6 +79,7 @@ export class ReactiveFormComponent implements OnInit {
       isToRead: true,
     },
   ];
+
   submitted = false;
   profileForm!: FormGroup;
   editId!: number;
@@ -121,7 +126,17 @@ export class ReactiveFormComponent implements OnInit {
   get addressControl() {
     return (this.profileFormControl['address'] as FormGroup).controls;
   }
-
+  setDate(data: any) {
+    // Set today date using the patchValue function
+    const date = new Date(data);
+    return {
+      date: {
+        year: date.getFullYear(),
+        month: date.getMonth() + 1,
+        day: date.getDate(),
+      },
+    };
+  }
   blockCharacter(e: any) {
     var x = e.which || e.keycode;
     if (x >= 42 && x <= 57) return true;
@@ -146,11 +161,6 @@ export class ReactiveFormComponent implements OnInit {
         (city) =>
           city.cityId === +address.city && city.stateId === +address.state
       );
-      // this.profileForm.value.address = {
-      //   country: coumtryName,
-      //   state: stateName,
-      //   city: cityName,
-      // };
       if (this.editId) {
         this.usersDetails[this.dataId] = {
           id: this.editId,
@@ -181,21 +191,15 @@ export class ReactiveFormComponent implements OnInit {
     this.submitted = false;
   }
   handleEdit(data: UsersDetails, index: number) {
-    console.log(this.usersDetails);
     let address = {
       country: data.address.country.countryId,
       state: data.address.state.stateId,
       city: data.address.city.cityId,
-    };
+    }
     this.selectCountry(0, data.address.country.countryId);
     this.selectState(0, data.address.state.stateId);
-    // let date = this.usersDetails[0].birthDate
-    // let bDate = date.getFullYear()+'-' + (date.getMonth()+1) + '-'+date.getDate()
-    // console.log(bDate);
     this.profileForm.patchValue(data);
-    // this.profileForm.controls['birthDate'].patchValue(bDate)
     this.profileForm.controls['address'].patchValue(address);
-    console.log(this.profileForm.value);
     this.editId = data.id;
     this.toggle = true;
     this.dataId = index;
