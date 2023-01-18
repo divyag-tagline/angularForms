@@ -55,6 +55,7 @@ export class ReactiveFormComponent implements OnInit {
   ];
   //  date = this.setDate('2001/09/06');
   date = new Date('2001/9/6');
+  today = new Date().toISOString().split('T')[0];
   usersDetails: UsersDetails[] = [
     {
       id: 1,
