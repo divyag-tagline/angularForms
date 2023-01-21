@@ -20,10 +20,9 @@
           <span
             class="text-danger"
             *ngIf="
-              profileFormControl['firstName'].touched ||
-              (submitted &&
-                profileFormControl['firstName'].pristine &&
-                profileFormControl['firstName'].invalid)
+              (profileFormControl['firstName'].touched &&
+                profileFormControl['firstName'].pristine) ||
+              (submitted && profileFormControl['firstName'].pristine)
             "
           >
             FirstName is required
@@ -43,10 +42,9 @@
           <span
             class="text-danger"
             *ngIf="
-              profileFormControl['lastName'].touched ||
-              (submitted &&
-                profileFormControl['lastName'].pristine &&
-                profileFormControl['lastName'].invalid)
+              (profileFormControl['lastName'].touched &&
+                profileFormControl['lastName'].pristine) ||
+              (submitted && profileFormControl['lastName'].pristine)
             "
           >
             Last Name is required
@@ -67,7 +65,8 @@
           <span
             class="text-danger"
             *ngIf="
-              profileFormControl['email'].touched ||
+              (profileFormControl['email'].touched &&
+                profileFormControl['email'].pristine) ||
               (submitted &&
                 profileFormControl['email'].pristine &&
                 profileFormControl['email'].invalid)
@@ -90,7 +89,8 @@
           <span
             class="text-danger"
             *ngIf="
-              profileFormControl['birthDate'].touched ||
+              (profileFormControl['birthDate'].touched &&
+                profileFormControl['birthDate'].pristine) ||
               (submitted &&
                 profileFormControl['birthDate'].pristine &&
                 profileFormControl['birthDate'].invalid)
@@ -118,7 +118,8 @@
               (profileFormControl['mobileNo'].invalid &&
                 submitted &&
                 profileFormControl['mobileNo'].pristine) ||
-              profileFormControl['mobileNo'].touched
+              (profileFormControl['mobileNo'].touched &&
+                profileFormControl['mobileNo'].pristine)
             "
           >
             MobileNo is required
@@ -146,7 +147,8 @@
             <span
               class="text-danger"
               *ngIf="
-                profileFormControl['gender'].touched ||
+                profileFormControl['gender'].touched &&
+                  profileFormControl['gender'].pristine ||
                 (profileFormControl['gender'].invalid &&
                   submitted &&
                   profileFormControl['gender'].pristine)
@@ -176,7 +178,8 @@
             <span
               class="text-danger"
               *ngIf="
-                addressControl['country'].touched ||
+                (addressControl['country'].touched &&
+                  addressControl['country'].pristine) ||
                 (addressControl['country'].invalid &&
                   submitted &&
                   addressControl['country'].pristine)
@@ -205,7 +208,9 @@
               class="text-danger"
               *ngIf="
                 (!addressControl['country'].value &&
-                  addressControl['state'].touched) ||
+                  addressControl['state'].pristine &&
+                  addressControl['state'].touched &&
+                  addressControl['state'].invalid) ||
                 (addressControl['state'].invalid &&
                   submitted &&
                   addressControl['state'].pristine)
@@ -240,6 +245,7 @@
               class="text-danger"
               *ngIf="
                 (!addressControl['state'].value &&
+                  addressControl['city'].pristine &&
                   addressControl['city'].touched) ||
                 (addressControl['city'].invalid &&
                   submitted &&
@@ -271,8 +277,9 @@
           <span
             class="text-danger"
             *ngIf="
-            profileFormControl['isToRead'].invalid &&
-              profileFormControl['isToRead'].touched ||
+              (profileFormControl['isToRead'].invalid &&
+                profileFormControl['isToRead'].pristine &&
+                profileFormControl['isToRead'].touched) ||
               (profileFormControl['isToRead'].invalid &&
                 submitted &&
                 profileFormControl['isToRead'].pristine)
